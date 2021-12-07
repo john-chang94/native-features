@@ -1,10 +1,11 @@
 import React from "react";
-import { View, Text } from 'react-native';
+import { View, Text, SafeAreaView } from "react-native";
+import { MaterialIcons } from "@expo/vector-icons";
 
 export default function HomeScreen() {
   return (
-    <View>
-        <Text>Home</Text>
-    </View>
+    <SafeAreaView>
+      <Text>Home</Text>
+    </SafeAreaView>
   );
 }
