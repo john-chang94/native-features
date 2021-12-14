@@ -1,7 +1,18 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  KeyboardAvoidingView,
+  ScrollView,
+} from "react-native";
+import { TextInput } from "react-native-paper";
 import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
+
+import { isIOS } from "../../utils/sysChecks";
+import { theme } from "../../theme";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -14,6 +25,9 @@ Notifications.setNotificationHandler({
 export default function NotificationsScreen() {
   const [expoPushToken, setExpoPushToken] = useState("");
   const [notification, setNotification] = useState(false);
+  const [title, setTitle] = useState("");
+  const [body, setBody] = useState("");
+  const [seconds, setSeconds] = useState(0);
   const notificationListener = useRef();
   const responseListener = useRef();
 
@@ -39,14 +53,25 @@ export default function NotificationsScreen() {
   }
 
   async function schedulePushNotification() {
-    await Notifications.scheduleNotificationAsync({
-      content: {
-        title: "You've got mail! 📬",
-        body: "Here is the notification body",
-        data: { data: "goes here" },
-      },
-      trigger: { seconds: 2 },
-    });
+    if (!title && !body) {
+      await Notifications.scheduleNotificationAsync({
+        content: {
+          title: "You've got mail! 📬",
+          body: "Here is the notification body",
+          data: { data: "goes here" },
+        },
+        trigger: { seconds: 2 },
+      });
+    }
+    else {
+      await Notifications.scheduleNotificationAsync({
+        content: {
+          title,
+          body
+        },
+        trigger: { seconds: 2 },
+      });
+    }
   }
 
   async function registerForPushNotificationsAsync() {
@@ -81,6 +106,12 @@ export default function NotificationsScreen() {
     return token;
   }
 
+  function clearNotificationText() {
+    setNotification(false);
+    setTitle("");
+    setBody("");
+  }
+
   useEffect(() => {
     registerForPushNotificationsAsync().then((token) =>
       setExpoPushToken(token)
@@ -99,49 +130,79 @@ export default function NotificationsScreen() {
       });
 
     return () => {
-      Notifications.removeNotificationSubscription(notificationListener.current);
+      Notifications.removeNotificationSubscription(
+        notificationListener.current
+      );
       Notifications.removeNotificationSubscription(responseListener.current);
     };
   }, []);
 
   return (
+    <KeyboardAvoidingView
+      behavior={isIOS ? "padding" : "height"}
+      styles={{ flex: 1 }}
+    >
     <View style={styles.container}>
-      <Text>Your expo push token: {expoPushToken}</Text>
       <View style={{ alignItems: "center", justifyContent: "center" }}>
         <Text>
           Title: {notification && notification.request.content.title}{" "}
         </Text>
         <Text>Body: {notification && notification.request.content.body}</Text>
-        <Text>
-          Data:{" "}
-          {notification && JSON.stringify(notification.request.content.data)}
-        </Text>
       </View>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={async () => {
-          await schedulePushNotification();
-        }}
-      >
-        <Text>Press to schedule a notification</Text>
-      </TouchableOpacity>
+      <View style={styles.inputContainer}>
+        <Text style={{ textAlign: "center", marginTop: 50 }}>
+          Fill in the information for the push notification
+        </Text>
+        <TextInput
+          style={theme.doubleSpacer.tbMd}
+          label="Title"
+          value={title}
+          onChangeText={(text) => setTitle(text)}
+        />
+        <TextInput
+          style={theme.doubleSpacer.tbMd}
+          label="Body"
+          value={body}
+          onChangeText={(text) => setBody(text)}
+        />
+        <TouchableOpacity
+          style={styles.button}
+          onPress={async () => {
+            await schedulePushNotification();
+          }}
+        >
+          <Text>Press to schedule a notification</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={clearNotificationText}
+        >
+          <Text>Clear notification message</Text>
+        </TouchableOpacity>
+      </View>
     </View>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    alignItems: "center",
+    // flex: 1,
+    // alignItems: "center",
     justifyContent: "space-around",
-    padding: 5
+    padding: 10,
+  },
+  inputContainer: {
+    // marginTop: 50
   },
   button: {
-    width: 230,
+    width: 250,
     padding: 10,
     borderWidth: 1,
     borderRadius: 5,
     alignItems: "center",
     alignSelf: "center",
+    marginTop: 15,
+    marginBottom: 15
   },
 });
