@@ -4,14 +4,12 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  KeyboardAvoidingView,
-  ScrollView,
+  SafeAreaView,
 } from "react-native";
 import { TextInput } from "react-native-paper";
 import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
 
-import { isIOS } from "../../utils/sysChecks";
 import { theme } from "../../theme";
 
 Notifications.setNotificationHandler({
@@ -62,12 +60,11 @@ export default function NotificationsScreen() {
         },
         trigger: { seconds: 2 },
       });
-    }
-    else {
+    } else {
       await Notifications.scheduleNotificationAsync({
         content: {
           title,
-          body
+          body,
         },
         trigger: { seconds: 2 },
       });
@@ -138,62 +135,57 @@ export default function NotificationsScreen() {
   }, []);
 
   return (
-    <KeyboardAvoidingView
-      behavior={isIOS ? "padding" : "height"}
-      styles={{ flex: 1 }}
-    >
-    <View style={styles.container}>
-      <View style={{ alignItems: "center", justifyContent: "center" }}>
-        <Text>
-          Title: {notification && notification.request.content.title}{" "}
-        </Text>
-        <Text>Body: {notification && notification.request.content.body}</Text>
-      </View>
-      <View style={styles.inputContainer}>
-        <Text style={{ textAlign: "center", marginTop: 50 }}>
+    <SafeAreaView>
+      <View style={styles.container}>
+        <View style={{ alignItems: "center", justifyContent: "center" }}>
+          <Text>
+            Title: {notification && notification.request.content.title}{" "}
+          </Text>
+          <Text>Body: {notification && notification.request.content.body}</Text>
+        </View>
+        <Text style={theme.spacer.topXl}>
           Fill in the information for the push notification
         </Text>
-        <TextInput
-          style={theme.doubleSpacer.tbMd}
-          label="Title"
-          value={title}
-          onChangeText={(text) => setTitle(text)}
-        />
-        <TextInput
-          style={theme.doubleSpacer.tbMd}
-          label="Body"
-          value={body}
-          onChangeText={(text) => setBody(text)}
-        />
-        <TouchableOpacity
-          style={styles.button}
-          onPress={async () => {
-            await schedulePushNotification();
-          }}
-        >
-          <Text>Press to schedule a notification</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={clearNotificationText}
-        >
-          <Text>Clear notification message</Text>
-        </TouchableOpacity>
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={theme.doubleSpacer.tbMd}
+            label="Title"
+            value={title}
+            onChangeText={(text) => setTitle(text)}
+          />
+          <TextInput
+            style={theme.doubleSpacer.tbMd}
+            label="Body"
+            value={body}
+            onChangeText={(text) => setBody(text)}
+          />
+          <TouchableOpacity
+            style={styles.button}
+            onPress={async () => {
+              await schedulePushNotification();
+            }}
+          >
+            <Text>Press to schedule a notification</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={clearNotificationText}
+          >
+            <Text>Clear notification message</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
-    </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
-    // alignItems: "center",
-    justifyContent: "space-around",
     padding: 10,
+    alignItems: "center",
   },
   inputContainer: {
-    // marginTop: 50
+    width: "100%",
   },
   button: {
     width: 250,
@@ -203,6 +195,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignSelf: "center",
     marginTop: 15,
-    marginBottom: 15
+    marginBottom: 15,
   },
 });

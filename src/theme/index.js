@@ -24,10 +24,10 @@ const spacer = {
     marginTop: spacing[1],
   },
   topLg: {
-    marginTop: spacing[2],
+    marginTop: spacing[4],
   },
   topXl: {
-    marginTop: spacing[3],
+    marginTop: spacing[6],
   },
   bottomSm: {
     marginBottom: spacing[0],
@@ -36,10 +36,10 @@ const spacer = {
     marginBottom: spacing[1],
   },
   bottomLg: {
-    marginBottom: spacing[2],
+    marginBottom: spacing[4],
   },
   bottomXl: {
-    marginBottom: spacing[3],
+    marginBottom: spacing[6],
   },
   leftSm: {
     marginLeft: spacing[0],
@@ -48,10 +48,10 @@ const spacer = {
     marginLeft: spacing[1],
   },
   leftLg: {
-    marginLeft: spacing[2],
+    marginLeft: spacing[4],
   },
   leftXl: {
-    marginLeft: spacing[3],
+    marginLeft: spacing[6],
   },
   rightSm: {
     marginRight: spacing[0],
@@ -60,10 +60,10 @@ const spacer = {
     marginRight: spacing[1],
   },
   rightLg: {
-    marginRight: spacing[2],
+    marginRight: spacing[4],
   },
   rightXl: {
-    marginRight: spacing[3],
+    marginRight: spacing[6],
   },
 };
 
@@ -77,12 +77,12 @@ const doubleSpacer = {
     marginBottom: spacing[1]
   },
   tbLg: {
-    marginTop: spacing[2],
-    marginBottom: spacing[2]
-  },
-  tbXl: {
     marginTop: spacing[3],
     marginBottom: spacing[3]
+  },
+  tbXl: {
+    marginTop: spacing[4],
+    marginBottom: spacing[4]
   },
   lrSm: {
     marginLeft: spacing[0],
@@ -93,12 +93,12 @@ const doubleSpacer = {
     marginRight: spacing[1]
   },
   lrLg: {
-    marginLeft: spacing[2],
-    marginRight: spacing[2]
-  },
-  lrXl: {
     marginLeft: spacing[3],
     marginRight: spacing[3]
+  },
+  lrXl: {
+    marginLeft: spacing[4],
+    marginRight: spacing[4]
   },
 };
 
